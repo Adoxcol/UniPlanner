@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Edit } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AddCourseModal } from '@/components/planner/add-course-modal';
 import { EditCourseModal } from '@/components/planner/edit-course-modal';
 import { SemesterCredits } from '@/components/SemesterCredits';
 import { TotalCredits } from '@/components/TotalCredits';
-import SavePlan from '@/components/SavePlan'; // Use the improved SavePlan component
+import SavePlan from '@/components/SavePlan';
 import { Course } from '@/types/course';
 import { Semester } from '@/types/semester';
 import { Plan } from '@/types/plan';
@@ -31,6 +31,14 @@ export default function DegreePlanner() {
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   });
+
+  // Update plan.requiredCredits when requiredCredits changes
+  useEffect(() => {
+    setPlan((prev) => ({
+      ...prev,
+      requiredCredits: requiredCredits ?? 120,
+    }));
+  }, [requiredCredits]);
 
   // Recalculate total credits whenever semesters change
   useEffect(() => {
@@ -56,7 +64,11 @@ export default function DegreePlanner() {
     };
     const updatedSemesters = [...semesters, newSemester];
     setSemesters(updatedSemesters);
-    setPlan({ ...plan, semesters: updatedSemesters, updatedAt: new Date().toISOString() });
+    setPlan((prev) => ({
+      ...prev,
+      semesters: updatedSemesters,
+      updatedAt: new Date().toISOString(),
+    }));
   };
 
   // Add a course to a specific semester
@@ -71,7 +83,11 @@ export default function DegreePlanner() {
         : semester
     );
     setSemesters(updatedSemesters);
-    setPlan({ ...plan, semesters: updatedSemesters, updatedAt: new Date().toISOString() });
+    setPlan((prev) => ({
+      ...prev,
+      semesters: updatedSemesters,
+      updatedAt: new Date().toISOString(),
+    }));
   };
 
   // Delete a course from a semester
@@ -88,7 +104,22 @@ export default function DegreePlanner() {
         : semester
     );
     setSemesters(updatedSemesters);
-    setPlan({ ...plan, semesters: updatedSemesters, updatedAt: new Date().toISOString() });
+    setPlan((prev) => ({
+      ...prev,
+      semesters: updatedSemesters,
+      updatedAt: new Date().toISOString(),
+    }));
+  };
+
+  // Delete a semester
+  const handleDeleteSemester = (semesterId: string) => {
+    const updatedSemesters = semesters.filter((semester) => semester.id !== semesterId);
+    setSemesters(updatedSemesters);
+    setPlan((prev) => ({
+      ...prev,
+      semesters: updatedSemesters,
+      updatedAt: new Date().toISOString(),
+    }));
   };
 
   return (
@@ -123,7 +154,16 @@ export default function DegreePlanner() {
                   <Edit className="h-4 w-4" />
                 </Button>
               </div>
-              <Badge variant="secondary">{semester.courses.length} courses</Badge>
+              <div className="flex gap-2">
+                <Badge variant="secondary">{semester.courses.length} courses</Badge>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleDeleteSemester(semester.id)}
+                >
+                  <Trash2 className="h-4 w-4 text-red-500" />
+                </Button>
+              </div>
             </div>
             <SemesterCredits courses={semester.courses} />
             <div className="space-y-3 mt-2">
@@ -189,18 +229,22 @@ export default function DegreePlanner() {
                 : semester
             );
             setSemesters(updatedSemesters);
-            setPlan({ ...plan, semesters: updatedSemesters, updatedAt: new Date().toISOString() });
+            setPlan((prev) => ({
+              ...prev,
+              semesters: updatedSemesters,
+              updatedAt: new Date().toISOString(),
+            }));
           }}
         />
       )}
       {isSaveModalOpen && (
-  <SavePlanModal
-    plan={plan}
-    onClose={() => {
-      setIsSaveModalOpen(false);
-    }}
-  />
-)}
+        <SavePlanModal
+          plan={plan}
+          onClose={() => {
+            setIsSaveModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

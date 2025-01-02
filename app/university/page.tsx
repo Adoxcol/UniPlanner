@@ -3,8 +3,6 @@
 import UniversityCard from "@/components/universities/UniversityCard";
 import { useEffect, useState } from "react";
 
- // Import the UniversityCard component
-
 interface University {
   id: string;
   universities_name: string;
@@ -54,21 +52,21 @@ export default function UniversityLandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-   
+    <div className="min-h-screen bg-background dark:bg-dark-background">
       <main className="max-w-7xl mx-auto p-6">
-      
-        <h1 className="text-4xl font-bold text-center text-gray-900 mb-8">University Directory</h1>
+        <h1 className="text-4xl font-bold text-center text-foreground dark:text-dark-foreground mb-8">
+          University Directory
+        </h1>
 
         {/* Search Bar */}
         <div className="mb-6 flex justify-center">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Search by university title"
-            className="w-full md:w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition ease-in-out duration-300"
-          />
+        <input
+  type="text"
+  value={searchTerm}
+  onChange={handleSearch}
+  placeholder="Search by university title"
+  className="w-full md:w-1/2 px-4 py-3 border border-border dark:border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary transition ease-in-out duration-300 dark:bg-card dark:text-foreground dark:placeholder:text-muted-foreground"
+/>
         </div>
 
         {error && <p className="text-red-500 text-center">{error}</p>}
@@ -76,7 +74,9 @@ export default function UniversityLandingPage() {
         {/* University Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredUniversities.length === 0 ? (
-            <p className="text-xl text-gray-600 text-center">No universities found</p>
+            <p className="text-xl text-muted-foreground dark:text-dark-muted-foreground text-center">
+              No universities found
+            </p>
           ) : (
             filteredUniversities.map((university) => (
               <UniversityCard

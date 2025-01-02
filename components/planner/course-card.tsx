@@ -1,37 +1,102 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Trash2 } from 'lucide-react';
-import { Course } from '@/types/course';
+import { navigation } from '@/lib/navigation';
+import { GraduationCap, Menu, User, X } from 'lucide-react';
+import { DesktopNavItem } from '../desktop-nav-item';
+import { MobileNavItem } from '../mobile-nav-item';
+import { ModeToggle } from '../mode-toggle';
+;
 
-interface CourseCardProps extends Course {
-  onDelete: () => void;
-}
-
-export function CourseCard({ code, name, credits, difficulty, onDelete }: CourseCardProps) {
-  const difficultyColor = {
-    Easy: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-    Medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-    Hard: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
-  }[difficulty];
+export function Navigation() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
-    <Card className="p-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h3 className="font-semibold">{code}</h3>
-          <p className="text-sm text-muted-foreground">{name}</p>
+    <header className="bg-background border-b">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+        <div className="flex lg:flex-1">
+          <Link href="/" className="-m-1.5 p-1.5 flex items-center space-x-2">
+            <GraduationCap className="h-8 w-8" />
+            <span className="font-bold text-xl">UniPlanner</span>
+          </Link>
         </div>
-        <Button variant="ghost" size="icon" onClick={onDelete}>
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      </div>
-      <div className="mt-4 flex items-center gap-2">
-        <Badge variant="outline">{credits} credits</Badge>
-        <Badge className={difficultyColor}>{difficulty}</Badge>
-      </div>
-    </Card>
+        <div className="flex lg:hidden">
+          <Button
+            variant="ghost"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <span className="sr-only">Open main menu</span>
+            <Menu className="h-6 w-6" aria-hidden="true" />
+          </Button>
+        </div>
+        <div className="hidden lg:flex lg:gap-x-8">
+          {navigation.map((item) => (
+            <DesktopNavItem key={item.name} item={item} pathname={pathname} />
+          ))}
+        </div>
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
+          <ModeToggle />
+          <Link href="/profile" passHref> {/* Add this Link component */}
+            <Button variant="ghost" size="icon">
+              <User className="h-5 w-5" />
+              <span className="sr-only">User account</span>
+            </Button>
+          </Link>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden">
+          <div className="fixed inset-0 z-50" />
+          <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="-m-1.5 p-1.5 flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
+                <GraduationCap className="h-8 w-8" />
+                <span className="font-bold text-xl">UniPlanner</span>
+              </Link>
+              <Button
+                variant="ghost"
+                className="-m-2.5 rounded-md p-2.5"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span className="sr-only">Close menu</span>
+                <X className="h-6 w-6" aria-hidden="true" />
+              </Button>
+            </div>
+            <div className="mt-6 flow-root">
+              <div className="-my-6 divide-y divide-gray-500/10">
+                <div className="space-y-2 py-6">
+                  {navigation.map((item) => (
+                    <MobileNavItem
+                      key={item.name}
+                      item={item}
+                      pathname={pathname}
+                      onClose={() => setMobileMenuOpen(false)}
+                    />
+                  ))}
+                </div>
+                <div className="py-6">
+                  <div className="flex items-center justify-between">
+                    <ModeToggle />
+                    <Link href="/profile" passHref> {/* Add this Link component */}
+                      <Button variant="ghost" size="icon">
+                        <User className="h-5 w-5" />
+                        <span className="sr-only">User account</span>
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </header>
   );
 }

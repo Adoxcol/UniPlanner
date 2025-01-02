@@ -17,13 +17,32 @@ interface University {
   student_numbers: number;
 }
 
-interface PageParams {
-  params: {
-    university_short_name: string; // Corrected to match the dynamic route
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
+// Fetch all universities to generate static params
+async function fetchAllUniversities(): Promise<University[]> {
+  const client = await clientPromise;
+  const db = client.db("University");
+  const universities = await db.collection("university").find().toArray();
+  return universities.map((doc) => ({
+    id: doc._id.toString(),
+    universities_name: doc.universities_name,
+    universities_short_name: doc.universities_short_name,
+    universities_location: doc.universities_location,
+    universities_website: doc.universities_website,
+    description: doc.description,
+    year_created: doc.year_created,
+    student_numbers: doc.student_numbers,
+  }));
 }
 
+// Generate static params for dynamic routes (for static generation at build time)
+export async function generateStaticParams() {
+  const universities = await fetchAllUniversities();
+  return universities.map((university) => ({
+    university_short_name: university.universities_short_name, // This will be used for dynamic routing
+  }));
+}
+
+// Fetch a single university by short name
 async function fetchUniversity(shortName: string): Promise<University | null> {
   const client = await clientPromise;
   const db = client.db("University");
@@ -46,7 +65,12 @@ async function fetchUniversity(shortName: string): Promise<University | null> {
   };
 }
 
-export async function generateMetadata({ params }: PageParams): Promise<Metadata> {
+// Generate metadata for the page dynamically based on the university short name
+export async function generateMetadata({
+  params,
+}: {
+  params: { university_short_name: string };
+}): Promise<Metadata> {
   const university = await fetchUniversity(params.university_short_name);
 
   if (!university) {
@@ -56,11 +80,28 @@ export async function generateMetadata({ params }: PageParams): Promise<Metadata
   return {
     title: university.universities_name,
     description: `Details about ${university.universities_name}`,
+    openGraph: {
+      title: university.universities_name,
+      description: university.description,
+     
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: university.universities_name,
+      description: university.description,
+      
+    },
   };
 }
 
-export default async function UniversityPage({ params }: PageParams) {
-  const university = await fetchUniversity(params.university_short_name);
+// Main page component
+export default async function UniversityPage({
+  params,
+}: {
+  params: { university_short_name: string };
+}) {
+  const { university_short_name } = params;
+  const university = await fetchUniversity(university_short_name);
 
   if (!university) {
     return (

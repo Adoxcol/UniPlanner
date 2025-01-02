@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Plan your degree, track your progress, and connect with fellow students.',
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -23,7 +23,7 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light">
           <div className="min-h-screen bg-background">
             <Navigation />
-            <main>{children}</main>
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{children}</main>
             <Toaster />
           </div>
         </ThemeProvider>

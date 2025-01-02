@@ -1,4 +1,4 @@
-import React from 'react';
+'use client';
 
 interface WebsiteLinkProps {
   website: string;
@@ -10,7 +10,7 @@ const WebsiteLink: React.FC<WebsiteLinkProps> = ({ website }) => {
       href={`https://${website}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="mt-4 inline-block text-blue-500 hover:text-blue-700"
+      className="mt-4 inline-block text-primary dark:text-dark-primary hover:text-primary/80"
     >
       Visit Website
     </a>

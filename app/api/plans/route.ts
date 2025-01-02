@@ -10,7 +10,7 @@ async function savePlan(plan: any) {
   }
 
   const client = await clientPromise;
-  const db = client.db('UniversityPlans');
+  const db = client.db('University');
 
   try {
     const result = await db.collection('plans').insertOne({
