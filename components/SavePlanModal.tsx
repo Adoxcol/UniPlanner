@@ -1,13 +1,11 @@
-// src/components/SavePlanModal.tsx
-
-'use client';
-
 import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Plan } from '@/types/firestore';
-import savePlan from '@/app/firebase/savePlan';
+import { Plan } from '@/types/mongodb';
+import savePlan from '@/app/api/plans';
+
+
 
 interface SavePlanModalProps {
   plan: Plan;

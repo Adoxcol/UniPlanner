@@ -4,10 +4,10 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plan } from '@/types/firestore';
-import savePlan from '@/app/firebase/savePlan'; // Make sure the path is correct
+ // Ensure you define a Plan type compatible with MongoDB
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Plan } from '@/types/mongodb';
 
 interface SavePlanProps {
   plan: Plan; // Current plan to be saved
@@ -37,10 +37,22 @@ export default function SavePlan({ plan }: SavePlanProps) {
         updatedAt: new Date().toISOString(),
       };
 
-      // Save the plan to Firestore
-      await savePlan(updatedPlan);
-      setSaveStatus('Plan saved successfully!'); // Success message
-      setIsModalOpen(false); // Close the modal
+      // Call API to save the plan
+      const response = await fetch('/api/plans', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedPlan),
+      });
+
+      if (response.ok) {
+        setSaveStatus('Plan saved successfully!');
+        setIsModalOpen(false); // Close the modal
+      } else {
+        const errorData = await response.json();
+        setSaveStatus(`Failed to save plan: ${errorData.message}`);
+      }
     } catch (error) {
       console.error('Error saving plan:', error);
       setSaveStatus('Failed to save plan. Please try again.');

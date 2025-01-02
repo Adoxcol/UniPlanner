@@ -1,10 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  eslint: {
-    ignoreDuringBuilds: true,
+  images: {
+    domains: ['images.unsplash.com'], // Add the domain of your external images
   },
-  images: { unoptimized: true },
 };
 
 module.exports = nextConfig;

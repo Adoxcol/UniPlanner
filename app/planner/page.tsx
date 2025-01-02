@@ -8,7 +8,7 @@ import { AddCourseModal } from '@/components/planner/add-course-modal';
 import { EditCourseModal } from '@/components/planner/edit-course-modal';
 import { SemesterCredits } from '@/components/SemesterCredits';
 import { TotalCredits } from '@/components/TotalCredits';
-import SavePlan from '@/components/SavePlan';
+import SavePlanModal from '@/components/SavePlanModal';
 import { Course } from '@/types/course';
 import { Semester } from '@/types/semester';
 import { Plan } from '@/types/plan';
@@ -16,15 +16,16 @@ import { Badge } from '@/components/ui/badge';
 
 export default function DegreePlanner() {
   const [semesters, setSemesters] = useState<Semester[]>([]);
-  const [requiredCredits, setRequiredCredits] = useState<number | null>(120); // Default value
+  const [requiredCredits, setRequiredCredits] = useState<number | null>(120);
   const [editingSemesterId, setEditingSemesterId] = useState<string | null>(null);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
 
-  // Plan state
   const [plan, setPlan] = useState<Plan>({
     userId: 'USER_ID', // Replace with actual user ID
     planName: 'My Degree Plan',
-    requiredCredits: requiredCredits ?? 120, // Default to 120 if null
+    universityName: '', // Initialize empty
+    requiredCredits: requiredCredits ?? 120,
     semesters: semesters,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -33,13 +34,13 @@ export default function DegreePlanner() {
   // Recalculate total credits whenever semesters change
   useEffect(() => {
     const updatedTotalCredits = semesters.reduce(
-      (sum, semester) => sum + semester.courses.reduce((courseSum, course) => courseSum + course.credits, 0),
+      (sum, semester) =>
+        sum + semester.courses.reduce((courseSum, course) => courseSum + course.credits, 0),
       0
     );
     setPlan((prev) => ({ ...prev, totalCredits: updatedTotalCredits, updatedAt: new Date().toISOString() }));
   }, [semesters]);
 
-  // Add a new semester
   const addSemester = () => {
     const newSemester: Semester = {
       id: (semesters.length + 1).toString(),
@@ -52,7 +53,6 @@ export default function DegreePlanner() {
     setPlan({ ...plan, semesters: updatedSemesters, updatedAt: new Date().toISOString() });
   };
 
-  // Add a new course
   const handleAddCourse = (semesterId: string, course: Course) => {
     const updatedSemesters = semesters.map((semester) =>
       semester.id === semesterId
@@ -67,7 +67,6 @@ export default function DegreePlanner() {
     setPlan({ ...plan, semesters: updatedSemesters, updatedAt: new Date().toISOString() });
   };
 
-  // Delete a course
   const handleDeleteCourse = (semesterId: string, courseId: string) => {
     const updatedSemesters = semesters.map((semester) =>
       semester.id === semesterId
@@ -84,7 +83,6 @@ export default function DegreePlanner() {
     setPlan({ ...plan, semesters: updatedSemesters, updatedAt: new Date().toISOString() });
   };
 
-  // Edit semester name
   const handleEditSemesterName = (semesterId: string, newName: string) => {
     const updatedSemesters = semesters.map((semester) =>
       semester.id === semesterId ? { ...semester, name: newName } : semester
@@ -94,7 +92,6 @@ export default function DegreePlanner() {
     setEditingSemesterId(null);
   };
 
-  // Update required credits
   const updateRequiredCredits = (credits: number) => {
     setRequiredCredits(credits);
     setPlan((prev) => ({ ...prev, requiredCredits: credits, updatedAt: new Date().toISOString() }));
@@ -102,14 +99,12 @@ export default function DegreePlanner() {
 
   return (
     <div className="container mx-auto py-8">
-      {/* Total Credits and Required Credits */}
       <TotalCredits
         semesters={semesters}
         requiredCredits={requiredCredits}
         setRequiredCredits={updateRequiredCredits}
       />
 
-      {/* Add Semester and Save Plan Buttons */}
       <div className="mb-6 flex justify-center gap-4">
         <Button
           onClick={addSemester}
@@ -117,10 +112,21 @@ export default function DegreePlanner() {
         >
           <span className="text-lg">Add Semester</span>
         </Button>
-        <SavePlan plan={plan} />
+        <Button
+          onClick={() => setIsSaveModalOpen(true)}
+          className="bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
+        >
+          <span className="text-lg">Save Plan</span>
+        </Button>
       </div>
 
-      {/* Semester Cards */}
+      {isSaveModalOpen && (
+        <SavePlanModal
+          plan={plan}
+          onClose={() => setIsSaveModalOpen(false)}
+        />
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {semesters.map((semester) => (
           <Card key={semester.id} className="p-4">
@@ -148,9 +154,7 @@ export default function DegreePlanner() {
               </div>
               <Badge variant="secondary">{semester.courses.length} courses</Badge>
             </div>
-            {/* Semester Credits */}
             <SemesterCredits courses={semester.courses} />
-            {/* Courses */}
             <div className="space-y-3 mt-2">
               {semester.courses.map((course) => (
                 <div key={course.id} className="flex justify-between items-center border p-2 rounded">
@@ -198,7 +202,6 @@ export default function DegreePlanner() {
         ))}
       </div>
 
-      {/* Edit Course Modal */}
       {editingCourse && (
         <EditCourseModal
           course={editingCourse}
