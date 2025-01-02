@@ -1,31 +1,31 @@
 // lib/mongodb.ts
-
-import { MongoClient } from "mongodb";
+import { MongoClient } from 'mongodb';
 
 if (!process.env.MONGO_DB_URL) {
-  throw new Error("Please add your MongoDB URI to .env.local");
+  throw new Error('Please add your Mongo URI to .env.local');
 }
 
-const uri = process.env.MONGO_DB_URL; // MongoDB connection string
+const uri = process.env.MONGO_DB_URL;
+const options = {};
 
-let client: MongoClient;
+let client;
 let clientPromise: Promise<MongoClient>;
 
-declare global {
-  // Allow global variables in Node.js to persist across modules
-  // This prevents TypeScript errors during development
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
-}
+if (process.env.NODE_ENV === 'development') {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  let globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>;
+  };
 
-if (process.env.NODE_ENV === "development") {
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri);
-    global._mongoClientPromise = client.connect();
+  if (!globalWithMongo._mongoClientPromise) {
+    client = new MongoClient(uri, options);
+    globalWithMongo._mongoClientPromise = client.connect();
   }
-  clientPromise = global._mongoClientPromise;
+  clientPromise = globalWithMongo._mongoClientPromise;
 } else {
-  // In production mode, create a new client for each request
-  client = new MongoClient(uri);
+  // In production mode, it's best to not use a global variable.
+  client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }
 

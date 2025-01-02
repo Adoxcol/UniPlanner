@@ -1,24 +1,21 @@
-// src/components/SavePlan.tsx
-
 'use client';
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
- // Ensure you define a Plan type compatible with MongoDB
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Plan } from '@/types/mongodb';
 
 interface SavePlanProps {
-  plan: Plan; // Current plan to be saved
+  plan: Plan;
 }
 
 export default function SavePlan({ plan }: SavePlanProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Track modal state
-  const [planName, setPlanName] = useState(plan.planName || ''); // Track plan name input
-  const [universityName, setUniversityName] = useState(''); // Track university name input
-  const [isSaving, setIsSaving] = useState(false); // Track saving state
-  const [saveStatus, setSaveStatus] = useState<string | null>(null); // Track success/error status
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [planName, setPlanName] = useState(plan.planName || '');
+  const [universityName, setUniversityName] = useState(plan.universityName || '');
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<string | null>(null);
 
   const handleSave = async () => {
     if (!planName || !universityName) {
@@ -35,9 +32,11 @@ export default function SavePlan({ plan }: SavePlanProps) {
         planName,
         universityName,
         updatedAt: new Date().toISOString(),
+        requiredCredits: plan.requiredCredits,
+        semesters: plan.semesters,
+        totalCredits: plan.totalCredits || 0,
       };
 
-      // Call API to save the plan
       const response = await fetch('/api/plans', {
         method: 'POST',
         headers: {
@@ -48,10 +47,10 @@ export default function SavePlan({ plan }: SavePlanProps) {
 
       if (response.ok) {
         setSaveStatus('Plan saved successfully!');
-        setIsModalOpen(false); // Close the modal
+        setIsModalOpen(false);
       } else {
         const errorData = await response.json();
-        setSaveStatus(`Failed to save plan: ${errorData.message}`);
+        setSaveStatus(`Failed to save plan: ${errorData.message || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Error saving plan:', error);
@@ -63,7 +62,6 @@ export default function SavePlan({ plan }: SavePlanProps) {
 
   return (
     <>
-      {/* Save Button to Open Modal */}
       <Button
         className="bg-blue-600 text-white text-lg hover:bg-blue-700 flex items-center gap-2"
         onClick={() => setIsModalOpen(true)}
@@ -71,14 +69,13 @@ export default function SavePlan({ plan }: SavePlanProps) {
         Save Plan
       </Button>
 
-      {/* Save Plan Modal */}
       {isModalOpen && (
-        <Dialog open onOpenChange={() => setIsModalOpen(false)}>
+        <Dialog open onOpenChange={() => setIsModalOpen(false)} aria-describedby="plan-description">
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Save Your Degree Plan</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4">
+            <div id="plan-description" className="space-y-4">
               <div>
                 <label htmlFor="planName" className="block text-sm font-medium text-gray-700">
                   Plan Name
@@ -106,11 +103,7 @@ export default function SavePlan({ plan }: SavePlanProps) {
                 />
               </div>
               {saveStatus && (
-                <p
-                  className={`text-sm ${
-                    saveStatus.includes('successfully') ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
+                <p className={`text-sm ${saveStatus.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
                   {saveStatus}
                 </p>
               )}

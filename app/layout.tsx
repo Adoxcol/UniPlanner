@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Plan your degree, track your progress, and connect with fellow students.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
