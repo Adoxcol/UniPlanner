@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Course } from '@/types/mongodb';
-import { calculateGPA } from '@/app/utils/calculateGPA';
+import { calculateGPA } from '@/utils/calculateGPA';
 import { Difficulty, SemesterCardProps } from '@/types/course';
 
 export function SemesterCard({ semesterName, planId }: { semesterName: string; planId: string }) {
@@ -144,6 +144,7 @@ function CourseRow({ course, onEdit, onDelete }: { course: Course; onEdit: () =>
 function CourseForm({ course, onSubmit, onCancel }: { course?: Course; onSubmit: (course: Course) => void; onCancel: () => void }) {
   const [formData, setFormData] = useState<Course>(
     course || {
+      id: 'default-id',
       code: '',
       name: '',
       credits: 0,

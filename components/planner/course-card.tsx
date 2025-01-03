@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { navigation } from '@/lib/navigation';
 import { GraduationCap, Menu, User, X } from 'lucide-react';
-import { DesktopNavItem } from '../desktop-nav-item';
-import { MobileNavItem } from '../mobile-nav-item';
-import { ModeToggle } from '../mode-toggle';
+import { DesktopNavItem } from '../Theme/desktop-nav-item';
+import { MobileNavItem } from '../Theme/mobile-nav-item';
+import { ModeToggle } from '../Theme/mode-toggle';
 ;
 
 export function Navigation() {

@@ -1,6 +1,6 @@
 'use client';
 
-import { ThemeProvider } from '@/components/theme-provider';
+import { ThemeProvider } from '@/components/Theme/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export function NoNavigationLayout({ children }: { children: React.ReactNode }) {

@@ -6,14 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AddCourseModal } from '@/components/planner/add-course-modal';
 import { EditCourseModal } from '@/components/planner/edit-course-modal';
-import { SemesterCredits } from '@/components/SemesterCredits';
-import { TotalCredits } from '@/components/TotalCredits';
-import SavePlan from '@/components/SavePlan';
+import { SemesterCredits } from '@/components/plans/SemesterCredits';
+import { TotalCredits } from '@/components/plans/TotalCredits';
+import SavePlan from '@/components/plans/SavePlan';
 import { Course } from '@/types/course';
 import { Semester } from '@/types/semester';
 import { Plan } from '@/types/plan';
 import { Badge } from '@/components/ui/badge';
-import SavePlanModal from '@/components/SavePlanModal';
+import SavePlanModal from '@/components/plans/SavePlanModal';
 
 export default function DegreePlanner() {
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
