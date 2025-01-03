@@ -1,14 +1,19 @@
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
 export interface Course {
-  id: any;
+  id: string;
   code: string;
   name: string;
   credits: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+  difficulty: Difficulty;
+  section?: string;
+  time?: string;
+  grade?: string;
+  classroom?: string;
 }
 
-export interface EnrolledCourse extends Course {
-  section: string;
-  classroom: string;
-  time: string;
-  grade: string;
+export interface SemesterCardProps {
+  semesterName: string;
+  courses: Course[];
 }
+

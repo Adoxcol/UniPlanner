@@ -46,7 +46,8 @@ export function AddEnrolledCourseForm({ onSubmit }: AddEnrolledCourseFormProps) 
       section: values.section,
       classroom: values.classroom,
       time: values.time,
-      grade: 'Z', // Default grade for new courses
+      grade: 'Z',
+      id: undefined
     };
 
     onSubmit(course);

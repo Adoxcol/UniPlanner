@@ -1,58 +1,50 @@
-'use client';
+import { Course } from '@/types/course';
 
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Edit2, Trash2, Clock, MapPin } from 'lucide-react';
-import { EnrolledCourse } from '@/types/course';
-
-interface PlanCardProps {
-  course: EnrolledCourse;
+interface CourseCardProps {
+  course: Course;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export function PlanCard({ course, onEdit, onDelete }: PlanCardProps) {
-  const difficultyColor = {
-    Easy: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-    Medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-    Hard: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100',
-  }[course.difficulty];
-
+export default function CourseCard({ course, onEdit, onDelete }: CourseCardProps) {
   return (
-    <Card className="p-4">
-      <div className="flex items-start justify-between">
-        <div>
-          <h3 className="font-semibold">{course.code}</h3>
-          <p className="text-sm text-muted-foreground">{course.name}</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="icon" onClick={onEdit}>
-            <Edit2 className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={onDelete}>
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-      
-      <div className="mt-4 space-y-2">
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Clock className="h-4 w-4" />
-          <span>{course.time}</span>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="h-4 w-4" />
-          <span>{course.classroom}</span>
+    <div className="flex flex-col md:flex-row justify-between items-start p-4 border border-border dark:border-dark-border rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+      <div className="flex-1">
+        <h3 className="text-lg font-semibold text-foreground dark:text-dark-foreground">
+          {course.code} - {course.name}
+        </h3>
+        <p className="text-sm text-muted-foreground dark:text-dark-muted-foreground">
+          Credits: {course.credits} • Difficulty: {course.difficulty}
+        </p>
+        <div className="mt-2 space-y-1">
+          <p className="text-sm text-muted-foreground dark:text-dark-muted-foreground">
+            Section: {course.section || 'N/A'}
+          </p>
+          <p className="text-sm text-muted-foreground dark:text-dark-muted-foreground">
+            Time: {course.time || 'N/A'}
+          </p>
+          <p className="text-sm text-muted-foreground dark:text-dark-muted-foreground">
+            Classroom: {course.classroom || 'N/A'}
+          </p>
+          <p className="text-sm text-muted-foreground dark:text-dark-muted-foreground">
+            Grade: {course.grade || 'N/A'}
+          </p>
         </div>
       </div>
-
-      <div className="mt-4 flex items-center gap-2">
-        <Badge variant="outline">{course.credits} credits</Badge>
-        <Badge className={difficultyColor}>{course.difficulty}</Badge>
-        <Badge variant="secondary">Section {course.section}</Badge>
-        <Badge variant="outline">Grade: {course.grade}</Badge>
+      <div className="flex gap-2 mt-4 md:mt-0">
+        <button
+          onClick={onEdit}
+          className="px-3 py-1 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors duration-200"
+        >
+          Edit
+        </button>
+        <button
+          onClick={onDelete}
+          className="px-3 py-1 text-sm font-medium text-red-500 hover:bg-red-500/10 rounded-lg transition-colors duration-200"
+        >
+          Delete
+        </button>
       </div>
-    </Card>
+    </div>
   );
 }

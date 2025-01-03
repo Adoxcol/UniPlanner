@@ -5,6 +5,7 @@ export interface Course {
   credits: number;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   section?: string;
+  classroom?: string;
   time?: string;
   grade?: string;
 }
@@ -28,7 +29,7 @@ export interface Plan {
 }
 
 export interface University {
-  id: string; // Firestore document ID
+  id: string; 
   universities_name: string;
   universities_short_name: string;
   location?: string; // Optional field

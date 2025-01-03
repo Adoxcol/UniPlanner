@@ -43,6 +43,7 @@ export function AddCourseForm({ onSubmit }: AddCourseFormProps) {
       name: values.name,
       credits: Number(values.credits),
       difficulty: values.difficulty as 'Easy' | 'Medium' | 'Hard',
+      id: undefined
     };
 
     onSubmit(course);
@@ -53,6 +54,7 @@ export function AddCourseForm({ onSubmit }: AddCourseFormProps) {
         name: `${values.name} Lab`,
         credits: 1,
         difficulty: values.difficulty as 'Easy' | 'Medium' | 'Hard',
+        id: undefined
       };
       onSubmit(labCourse);
     }

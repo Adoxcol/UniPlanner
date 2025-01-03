@@ -22,7 +22,7 @@ export default function DegreePlanner() {
   const [editingSemesterId, setEditingSemesterId] = useState<string | null>(null);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [plan, setPlan] = useState<Plan>({
-    userId: 'USER_ID', // Replace with actual user ID
+    userId: '1', // Replace with actual user ID
     planName: 'My Degree Plan',
     universityName: '',
     requiredCredits: requiredCredits ?? 120,
