@@ -7,7 +7,8 @@ import SavePlanModal from './SavePlanModal'; // Import the SavePlanModal
 import { useAuth } from '@clerk/nextjs'; // Import Clerk's useAuth hook
 
 interface SavePlanProps {
-  plan: Plan;
+  plan: Plan; // The plan object
+  onPlanSave: (plan: Plan) => void; // Callback function for saving
 }
 
 export default function SavePlan({ plan }: SavePlanProps) {
@@ -25,7 +26,7 @@ export default function SavePlan({ plan }: SavePlanProps) {
 
       {isModalOpen && (
         <SavePlanModal
-          plan={{ ...plan, userId }} // Pass the user ID to the modal
+          plan={{ ...plan, userId: String(userId ?? "defaultUserId") }} // Fallback to a default user ID and ensure it's a string
           onClose={() => setIsModalOpen(false)}
         />
       )}

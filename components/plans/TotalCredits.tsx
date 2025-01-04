@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { GraduationCap } from 'lucide-react';
 
 interface TotalCreditsProps {
-  semesters?: { courses: { credits: number }[] }[];
+  semesters?: { courses: { credits: number | string }[] }[];
   requiredCredits: number | null;
   setRequiredCredits: (credits: number) => void; // Callback to update required credits
 }
@@ -18,7 +18,11 @@ export function TotalCredits({ semesters = [], requiredCredits, setRequiredCredi
   useEffect(() => {
     const calculatedTotal = semesters.reduce(
       (semesterSum, semester) =>
-        semesterSum + (semester.courses?.reduce((courseSum, course) => courseSum + (course.credits || 0), 0) || 0),
+        semesterSum +
+        (semester.courses?.reduce(
+          (courseSum, course) => courseSum + Number(course.credits || 0), // Convert credits to a number
+          0
+        ) || 0),
       0
     );
     setTotalCredits(calculatedTotal);

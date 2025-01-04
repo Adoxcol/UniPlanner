@@ -1,9 +1,12 @@
+// Define the Difficulty type as a union of specific strings
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
 export interface Course {
   id: string;
   code: string;
   name: string;
   credits: number;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
+  difficulty: Difficulty; // Use the exported Difficulty type
   section?: string;
   classroom?: string;
   time?: string;
