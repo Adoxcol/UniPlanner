@@ -34,12 +34,17 @@ async function savePlan(plan: any) {
     return NextResponse.json({ success: false, error: 'Plan name is required.' }, { status: 400 });
   }
 
+  if (!plan.userId) {
+    return NextResponse.json({ success: false, error: 'User ID is required.' }, { status: 400 });
+  }
+
   const client = await clientPromise;
   const db = client.db('University');
 
   try {
     const result = await db.collection('plans').insertOne({
       ...plan,
+      userId: plan.userId, // Ensure the Clerk user ID is saved
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
@@ -72,6 +77,12 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const plan = await request.json();
+
+    // Ensure the plan includes the Clerk user ID
+    if (!plan.userId) {
+      return NextResponse.json({ success: false, error: 'User ID is required' }, { status: 400 });
+    }
+
     return await savePlan(plan);
   } catch (error) {
     console.error('Error in POST method:', error);

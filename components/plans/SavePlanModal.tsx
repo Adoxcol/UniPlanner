@@ -19,7 +19,7 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
 
   const handleSave = async (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent any default form submission
-    
+
     if (!planName || !universityName) {
       setError('Please provide both plan name and university name.');
       return;
@@ -29,6 +29,7 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
     setError(null);
 
     try {
+      // Include the user ID in the updated plan
       const updatedPlan = {
         ...plan,
         planName,
@@ -106,16 +107,16 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
           {error && <p className="text-sm text-red-500">{error}</p>}
 
           <div className="flex justify-end gap-2">
-            <Button 
-              onClick={handleDialogClose} 
-              variant="outline" 
+            <Button
+              onClick={handleDialogClose}
+              variant="outline"
               disabled={isSaving}
             >
               Cancel
             </Button>
-            <Button 
-              onClick={handleSave} 
-              disabled={isSaving} 
+            <Button
+              onClick={handleSave}
+              disabled={isSaving}
               className="bg-blue-600 text-white"
             >
               {isSaving ? 'Saving...' : 'Save Plan'}
