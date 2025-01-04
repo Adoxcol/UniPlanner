@@ -10,9 +10,10 @@ import {
   UserButton
 } from '@clerk/nextjs'
 
-import { Toaster } from '@/components/ui/toaster';
-import { Navigation } from '@/components/Theme/navigation';
 
+import { Navigation } from '@/components/Theme/navigation';
+import {  neobrutalism } from '@clerk/themes'
+import { Toaster } from 'sonner';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -26,20 +27,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider
+    appearance={{
+      baseTheme: neobrutalism,
+    }}
+    >
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
           <div className="min-h-screen bg-background">
-          <SignedOut>
-                <SignInButton />
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
+          
             <Navigation />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">{children}</main>
-            <Toaster />
+            <Toaster position="top-center" />
           </div>
         </ThemeProvider>
       </body>

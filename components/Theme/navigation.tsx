@@ -9,6 +9,9 @@ import { GraduationCap, Menu, User, X } from 'lucide-react';
 import { DesktopNavItem } from './desktop-nav-item';
 import { MobileNavItem } from './mobile-nav-item';
 import { ModeToggle } from './mode-toggle';
+import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs';
+import CustomUserButton from '../Auth/CustomUserButton';
+ // Import the custom button
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -40,12 +43,18 @@ export function Navigation() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
           <ModeToggle />
-          <Link href="/profile" passHref> {/* Add this Link component */}
-            <Button variant="ghost" size="icon">
-              <User className="h-5 w-5" />
-              <span className="sr-only">User account</span>
-            </Button>
-          </Link>
+          <SignedIn>
+            {/* Replace <UserButton /> with CustomUserButton */}
+            <CustomUserButton />
+          </SignedIn>
+          <SignedOut>
+            <SignInButton>
+              <Button variant="ghost" size="icon">
+                <User className="h-5 w-5" />
+                <span className="sr-only">Sign in</span>
+              </Button>
+            </SignInButton>
+          </SignedOut>
         </div>
       </nav>
 
@@ -55,7 +64,7 @@ export function Navigation() {
           <div className="fixed inset-0 z-50" />
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
             <div className="flex items-center justify-between">
-              <Link href="/profile" className="-m-1.5 p-1.5 flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
+              <Link href="/" className="-m-1.5 p-1.5 flex items-center space-x-2" onClick={() => setMobileMenuOpen(false)}>
                 <GraduationCap className="h-8 w-8" />
                 <span className="font-bold text-xl">UniPlanner</span>
               </Link>
@@ -83,12 +92,18 @@ export function Navigation() {
                 <div className="py-6">
                   <div className="flex items-center justify-between">
                     <ModeToggle />
-                    <Link href="/signup" passHref> {/* Add this Link component */}
-                      <Button variant="ghost" size="icon">
-                        <User className="h-5 w-5" />
-                        <span className="sr-only">User account</span>
-                      </Button>
-                    </Link>
+                    <SignedIn>
+                      {/* Replace <UserButton /> with CustomUserButton */}
+                      <CustomUserButton />
+                    </SignedIn>
+                    <SignedOut>
+                      <SignInButton>
+                        <Button variant="ghost" size="icon">
+                          <User className="h-5 w-5" />
+                          <span className="sr-only">Sign in</span>
+                        </Button>
+                      </SignInButton>
+                    </SignedOut>
                   </div>
                 </div>
               </div>
