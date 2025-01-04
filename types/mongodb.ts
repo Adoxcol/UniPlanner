@@ -21,6 +21,7 @@ export interface Semester {
 }
 
 export interface Plan {
+  _id: string;
   userId: string;
   planName: string;
   universityName?: string;

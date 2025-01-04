@@ -19,19 +19,15 @@ export async function PUT(request: Request, { params }: { params: { planId: stri
 
     // Parse request body
     const body = await request.json();
-    console.log('Received request body:', body);
-
-    // Remove _id field to prevent modification of immutable field
-    if (body._id) {
-      delete body._id;
-    }
-
     if (!body || typeof body !== 'object' || !Object.keys(body).length) {
       return NextResponse.json(
         { success: false, error: 'Invalid or missing data in request body' },
         { status: 400 }
       );
     }
+
+    console.log('Plan ID:', planId);
+    console.log('Request body:', body);
 
     // Update plan in database
     const result = await db.collection('plans').updateOne(
@@ -46,6 +42,7 @@ export async function PUT(request: Request, { params }: { params: { planId: stri
       );
     }
 
+    // Success response
     return NextResponse.json({ success: true, message: 'Plan updated successfully' });
   } catch (error) {
     console.error('Error updating plan:', error);
