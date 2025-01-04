@@ -85,8 +85,8 @@ export function SemesterCard({
           <Button onClick={() => setIsAddingCourse(true)} disabled={isAddingCourse}>
             <Plus className="mr-2 h-4 w-4" /> Add Course
           </Button>
-          <div className="text-lg font-semibold">
-            GPA: <span className="text-primary">{gpa || 'N/A'}</span>
+          <div>
+            <p>GPA: {gpa || 'N/A'}</p>
           </div>
         </div>
       </CardContent>
@@ -149,13 +149,32 @@ function CourseForm({ course, onSubmit, onCancel }: { course?: Course; onSubmit:
     }
   );
 
+  const [error, setError] = useState<string | null>(null);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (name === 'grade') {
+      const validGradePattern = /^[A-F][+-]?$/i;
+      if (value === '' || validGradePattern.test(value)) {
+        setFormData({ ...formData, [name]: value });
+        setError(null);
+      } else {
+        setError('Invalid grade. Please enter a valid grade like A, B+, or C-.');
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (formData.grade && error) {
+      alert('Please fix the errors before submitting.');
+      return;
+    }
+
     onSubmit(formData);
     setFormData({
       id: '',
@@ -197,6 +216,7 @@ function CourseForm({ course, onSubmit, onCancel }: { course?: Course; onSubmit:
           <InputField label="Grade (Optional)" id="grade" name="grade" value={formData.grade || ''} onChange={handleChange} />
           <InputField label="Classroom (Optional)" id="classroom" name="classroom" value={formData.classroom || ''} onChange={handleChange} />
         </div>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
         <div className="flex justify-end space-x-2">
           <Button type="button" variant="outline" onClick={onCancel}>
             <X className="mr-2 h-4 w-4" /> Cancel

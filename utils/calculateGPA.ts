@@ -10,13 +10,12 @@ export function calculateGPA(courses: { credits: number; grade?: string }[]): nu
   let totalCredits = 0;
   let totalGradePoints = 0;
 
-  courses.forEach(course => {
-    const grade = course.grade?.toUpperCase();
-    if (grade && grade in gradePoints) {
-      totalCredits += course.credits || 0;
-      totalGradePoints += (course.credits || 0) * gradePoints[grade];
+  courses.forEach((course) => {
+    if (course.grade && gradePoints[course.grade.toUpperCase()]) {
+      totalCredits += course.credits;
+      totalGradePoints += course.credits * gradePoints[course.grade.toUpperCase()];
     }
   });
 
-  return totalCredits > 0 ? Number((totalGradePoints / totalCredits).toFixed(2)) : 0;
+  return totalCredits > 0 ? parseFloat((totalGradePoints / totalCredits).toFixed(2)) : 0;
 }
