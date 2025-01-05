@@ -9,7 +9,7 @@ const ProfileHeader = () => {
       <div className="flex flex-col md:flex-row items-center gap-6">
         <div className="relative group">
           <div className="w-32 h-32 rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-105">
-            <Image></Image>
+            <Image src={""} alt={""}></Image>
           </div>
           <div className="absolute bottom-0 right-0 bg-primary rounded-full p-2">
             <GraduationCap className="w-5 h-5 text-white" />
