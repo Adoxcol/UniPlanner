@@ -39,3 +39,16 @@ export interface University {
   location?: string; // Optional field
   website?: string; // Optional field
 }
+
+export interface User {
+  id: string;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  imageUrl?: string | null;
+  clerkUserId: string;
+  university?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  plans?: Plan[]; // List of associated plans
+}
