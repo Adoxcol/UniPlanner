@@ -2,18 +2,14 @@
 
 import { GraduationCap, Award, BookOpen, MessageSquare } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-
+import Image from "next/image";
 const ProfileHeader = () => {
   return (
     <div className="w-full bg-card dark:bg-card rounded-lg shadow-lg p-6 mb-6 animate-fade-in">
       <div className="flex flex-col md:flex-row items-center gap-6">
         <div className="relative group">
           <div className="w-32 h-32 rounded-full overflow-hidden transition-transform duration-300 group-hover:scale-105">
-            <img
-              src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952"
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
+            <Image></Image>
           </div>
           <div className="absolute bottom-0 right-0 bg-primary rounded-full p-2">
             <GraduationCap className="w-5 h-5 text-white" />

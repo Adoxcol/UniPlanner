@@ -9,19 +9,18 @@ import { Plan } from '@/types/mongodb';
 interface SavePlanModalProps {
   plan: Plan;
   onClose: () => void;
+  onSave: (updatedPlan: Plan) => Promise<void>;
 }
 
-export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
+export default function SavePlanModal({ plan, onClose, onSave }: SavePlanModalProps) {
   const [planName, setPlanName] = useState(plan.planName || '');
   const [universityName, setUniversityName] = useState(plan.universityName || '');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSave = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent any default form submission
-
+  const handleSave = async () => {
     if (!planName || !universityName) {
-      setError('Please provide both plan name and university name.');
+      setError('Plan name and university name are required.');
       return;
     }
 
@@ -29,7 +28,6 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
     setError(null);
 
     try {
-      // Include the user ID in the updated plan
       const updatedPlan = {
         ...plan,
         planName,
@@ -37,22 +35,8 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
         updatedAt: new Date().toISOString(),
       };
 
-      const response = await fetch('/api/plans', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedPlan),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to save plan');
-      }
-
-      // Only close the modal after successful save
-      onClose();
+      await onSave(updatedPlan); // Save through the passed callback
+      onClose(); // Close modal after saving
     } catch (err) {
       console.error('Error saving plan:', err);
       setError('Failed to save the plan. Please try again.');
@@ -61,18 +45,11 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
     }
   };
 
-  // Handle dialog close separately
-  const handleDialogClose = () => {
-    if (!isSaving) {
-      onClose();
-    }
-  };
-
   return (
-    <Dialog open onOpenChange={handleDialogClose}>
+    <Dialog open onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Name Your Degree Plan</DialogTitle>
+          <DialogTitle>Edit Your Degree Plan</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
@@ -85,7 +62,6 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
               value={planName}
               onChange={(e) => setPlanName(e.target.value)}
               placeholder="Enter plan name"
-              className="mt-1"
               disabled={isSaving}
             />
           </div>
@@ -99,7 +75,6 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
               value={universityName}
               onChange={(e) => setUniversityName(e.target.value)}
               placeholder="Enter university name"
-              className="mt-1"
               disabled={isSaving}
             />
           </div>
@@ -108,7 +83,7 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
 
           <div className="flex justify-end gap-2">
             <Button
-              onClick={handleDialogClose}
+              onClick={onClose}
               variant="outline"
               disabled={isSaving}
             >
@@ -119,7 +94,7 @@ export default function SavePlanModal({ plan, onClose }: SavePlanModalProps) {
               disabled={isSaving}
               className="bg-blue-600 text-white"
             >
-              {isSaving ? 'Saving...' : 'Save Plan'}
+              {isSaving ? 'Saving...' : 'Save'}
             </Button>
           </div>
         </div>
