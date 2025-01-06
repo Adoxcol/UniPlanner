@@ -292,9 +292,10 @@ export default function DegreePlanner() {
 
           {isSaveModalOpen && selectedPlan && (
             <SavePlanModal
-              plan={selectedPlan}
-              onClose={() => setIsSaveModalOpen(false)}
-            />
+                plan={selectedPlan}
+                onClose={() => setIsSaveModalOpen(false)} onSave={function (updatedPlan: Plan): Promise<void> {
+                  throw new Error('Function not implemented.');
+                } }            />
           )}
         </>
       )}
